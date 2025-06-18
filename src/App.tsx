@@ -1,13 +1,11 @@
-import { Button } from '@/components/ui/button'
+import { Route, Routes } from 'react-router'
+import { Users } from '@/components/pages/Users'
 
 function App() {
   return (
-    <>
-      <div className='bg-slate-500'>
-        <h1>Hello World</h1>
-        <Button>Click me</Button>
-      </div>
-    </>
+    <Routes>
+      <Route path='/' element={<Users />} />
+    </Routes>
   )
 }
 
