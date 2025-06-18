@@ -1,4 +1,4 @@
-import { users } from './mock-data'
+import { users } from '@/api/mock-data'
 
 export interface UserDto {
   userId: string

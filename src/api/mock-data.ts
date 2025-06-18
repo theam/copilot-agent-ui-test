@@ -1,4 +1,4 @@
-import type { UserDto } from './mock-api'
+import type { UserDto } from '@/api/mock-api'
 
 export const users: UserDto[] = [
   {
