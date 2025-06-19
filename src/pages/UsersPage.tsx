@@ -66,7 +66,7 @@ const UsersPage: React.FC = () => {
             <Column field="userId" header="ID" style={{ minWidth: '60px' }} />
             <Column field="name" header="Name" sortable style={{ minWidth: '150px' }} />
             <Column field="username" header="Username" sortable style={{ minWidth: '120px' }} />
-            <Column field="email" header="Email" style={{ minWidth: '200px' }} />
+            <Column field="email" header="Email" sortable style={{ minWidth: '200px' }} />
             <Column field="userTin" header="TIN" sortable style={{ minWidth: '120px' }} />
             <Column field="phone" header="Phone" style={{ minWidth: '120px' }} />
           </DataTable>
