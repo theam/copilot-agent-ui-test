@@ -12,7 +12,7 @@ import type { CreateUserDto } from '@/api/mock-api.ts';
 import { useUserStore } from '@/lib/userStore';
 
 const UsersPage: React.FC = () => {
-  const { users, setUsers, addUser } = useUserStore();
+  const { users, setUsers } = useUserStore();
   const [loading, setLoading] = useState(true);
   const [showDialog, setShowDialog] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -85,34 +85,55 @@ const UsersPage: React.FC = () => {
         >
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
             <span className="p-float-label">
-              <InputText id="name" className="w-full" {...register('name', { required: 'Name is required' })} />
+              <InputText id="name" className="w-full" {...register('name', { 
+                required: 'Name is required',
+                maxLength: { value: 50, message: 'Name must be 50 characters or less' },
+                pattern: { value: /^[a-zA-Z0-9_ ]+$/, message: 'Name can only contain letters, numbers, underscores, and spaces' }
+              })} />
               <label htmlFor="name">Name</label>
             </span>
             {errors.name && <small className="p-error">{errors.name.message}</small>}
             <span className="p-float-label">
-              <InputText id="username" className="w-full" {...register('username', { required: 'Username is required' })} />
+              <InputText id="username" className="w-full" {...register('username', { 
+                required: 'Username is required',
+                maxLength: { value: 50, message: 'Username must be 50 characters or less' },
+                pattern: { value: /^[a-zA-Z0-9_ ]+$/, message: 'Username can only contain letters, numbers, underscores, and spaces' }
+              })} />
               <label htmlFor="username">Username</label>
             </span>
             {errors.username && <small className="p-error">{errors.username.message}</small>}
             <span className="p-float-label">
-              <InputText id="email" className="w-full" {...register('email', { required: 'Email is required' })} />
+              <InputText id="email" className="w-full" {...register('email', { 
+                required: 'Email is required',
+                maxLength: { value: 50, message: 'Email must be 50 characters or less' },
+                pattern: { value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, message: 'Please enter a valid email address' }
+              })} />
               <label htmlFor="email">Email</label>
             </span>
             {errors.email && <small className="p-error">{errors.email.message}</small>}
             <span className="p-float-label">
-              <InputText id="userTin" className="w-full" {...register('userTin', { required: 'TIN is required' })} />
+              <InputText id="userTin" className="w-full" {...register('userTin', { 
+                required: 'TIN is required',
+                pattern: { value: /^\d{9}$/, message: 'TIN must be exactly 9 digits' }
+              })} />
               <label htmlFor="userTin">TIN</label>
             </span>
             {errors.userTin && <small className="p-error">{errors.userTin.message}</small>}
             <span className="p-float-label">
-              <InputText id="phone" className="w-full" {...register('phone', { required: 'Phone is required' })} />
+              <InputText id="phone" className="w-full" {...register('phone', { 
+                required: 'Phone is required',
+                pattern: { value: /^\d{10}$/, message: 'Phone must be exactly 10 digits' }
+              })} />
               <label htmlFor="phone">Phone</label>
             </span>
             {errors.phone && <small className="p-error">{errors.phone.message}</small>}
             <span className="p-float-label">
-              <InputText id="website" className="w-full" {...register('website')} />
+              <InputText id="website" className="w-full" {...register('website', {
+                pattern: { value: /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$/, message: 'Please enter a valid URL (e.g., https://example.com)' }
+              })} />
               <label htmlFor="website">Website</label>
             </span>
+            {errors.website && <small className="p-error">{errors.website.message}</small>}
           </form>
         </Dialog>
       </Card>
