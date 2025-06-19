@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { ProgressSpinner } from 'primereact/progressspinner';
@@ -10,6 +10,7 @@ import { useForm } from 'react-hook-form';
 import { UserMockApi } from '@/api/mock-api.ts';
 import type { CreateUserDto, UpdateUserDto, UserDto } from '@/api/mock-api.ts';
 import { useUserStore } from '@/lib/userStore';
+import EditUserForm from '@/components/EditUserForm';
 
 const UsersPage: React.FC = () => {
   const { users, setUsers, updateUser } = useUserStore();
@@ -22,17 +23,17 @@ const UsersPage: React.FC = () => {
   const { register, handleSubmit, reset, formState: { errors } } = useForm<CreateUserDto>();
   const { register: registerEdit, handleSubmit: handleSubmitEdit, reset: resetEdit, setValue, formState: { errors: errorsEdit } } = useForm<UpdateUserDto>();
 
-  const fetchUsers = useCallback(() => {
+  const fetchUsers = () => {
     setLoading(true);
     UserMockApi.getUsers().then((data) => {
       setUsers(data);
       setLoading(false);
     });
-  }, [setUsers]);
+  };
 
   useEffect(() => {
     fetchUsers();
-  }, [fetchUsers]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onSubmit = async (data: CreateUserDto) => {
     setSubmitting(true);
@@ -169,36 +170,8 @@ const UsersPage: React.FC = () => {
             </div>
           }
         >
-          <form onSubmit={handleSubmitEdit(onEditSubmit)} className="flex flex-col gap-4">
-            <span className="p-float-label">
-              <InputText id="editName" className="w-full" {...registerEdit('name')} />
-              <label htmlFor="editName">Name</label>
-            </span>
-            {errorsEdit.name && <small className="p-error">{errorsEdit.name.message}</small>}
-            <span className="p-float-label">
-              <InputText id="editUsername" className="w-full" {...registerEdit('username')} />
-              <label htmlFor="editUsername">Username</label>
-            </span>
-            {errorsEdit.username && <small className="p-error">{errorsEdit.username.message}</small>}
-            <span className="p-float-label">
-              <InputText id="editEmail" className="w-full" {...registerEdit('email')} />
-              <label htmlFor="editEmail">Email</label>
-            </span>
-            {errorsEdit.email && <small className="p-error">{errorsEdit.email.message}</small>}
-            <span className="p-float-label">
-              <InputText id="editUserTin" className="w-full" {...registerEdit('userTin')} />
-              <label htmlFor="editUserTin">TIN</label>
-            </span>
-            {errorsEdit.userTin && <small className="p-error">{errorsEdit.userTin.message}</small>}
-            <span className="p-float-label">
-              <InputText id="editPhone" className="w-full" {...registerEdit('phone')} />
-              <label htmlFor="editPhone">Phone</label>
-            </span>
-            {errorsEdit.phone && <small className="p-error">{errorsEdit.phone.message}</small>}
-            <span className="p-float-label">
-              <InputText id="editWebsite" className="w-full" {...registerEdit('website')} />
-              <label htmlFor="editWebsite">Website</label>
-            </span>
+          <form onSubmit={handleSubmitEdit(onEditSubmit)}>
+            <EditUserForm register={registerEdit} errors={errorsEdit} />
           </form>
         </Dialog>
       </Card>
