@@ -30,19 +30,19 @@ export interface UpdateUserDto {
 
 export class UserMockApi {
   public static async getUsers(): Promise<UserDto[]> {
-    const delay = Math.random() * 43000 + 2000 // Random delay between 2s and 45s
+    const delay = Math.random() * 2000 + 1000 // Random delay between 1s and 3s
     await new Promise((resolve) => setTimeout(resolve, delay))
     return users
   }
 
   public static async getUserById(userId: string): Promise<UserDto | undefined> {
-    const delay = Math.random() * 43000 + 2000 // Random delay between 2s and 45s
+    const delay = Math.random() * 2000 + 1000 // Random delay between 1s and 3s
     await new Promise((resolve) => setTimeout(resolve, delay))
     return users.find((user) => user.userId === userId)
   }
 
   public static async createUser(user: CreateUserDto): Promise<UserDto> {
-    const delay = Math.random() * 43000 + 2000 // Random delay between 2s and 45s
+    const delay = Math.random() * 2000 + 1000 // Random delay between 1s and 3s
     await new Promise((resolve) => setTimeout(resolve, delay))
     const newUser = { ...user, userId: String(users.length + 1) }
     users.push(newUser)
@@ -53,7 +53,7 @@ export class UserMockApi {
     userId: string,
     user: UpdateUserDto
   ): Promise<UserDto | undefined> {
-    const delay = Math.random() * 43000 + 2000 // Random delay between 2s and 45s
+    const delay = Math.random() * 2000 + 1000 // Random delay between 1s and 3s
     await new Promise((resolve) => setTimeout(resolve, delay))
     const index = users.findIndex((user) => user.userId === userId)
     if (index === -1) {

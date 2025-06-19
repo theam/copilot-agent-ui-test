@@ -1,14 +1,12 @@
-import { Button } from '@/components/ui/button'
+import { Routes, Route } from 'react-router';
+import UsersPage from './pages/UsersPage';
 
 function App() {
   return (
-    <>
-      <div className='bg-slate-500'>
-        <h1>Hello World</h1>
-        <Button>Click me</Button>
-      </div>
-    </>
-  )
+    <Routes>
+      <Route path="/" element={<UsersPage />} />
+    </Routes>
+  );
 }
 
-export default App
+export default App;
