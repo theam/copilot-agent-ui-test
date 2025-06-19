@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { ProgressSpinner } from 'primereact/progressspinner';
@@ -8,28 +8,31 @@ import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { useForm } from 'react-hook-form';
 import { UserMockApi } from '@/api/mock-api.ts';
-import type { CreateUserDto } from '@/api/mock-api.ts';
+import type { CreateUserDto, UpdateUserDto, UserDto } from '@/api/mock-api.ts';
 import { useUserStore } from '@/lib/userStore';
 
 const UsersPage: React.FC = () => {
-  const { users, setUsers, addUser } = useUserStore();
+  const { users, setUsers, updateUser } = useUserStore();
   const [loading, setLoading] = useState(true);
   const [showDialog, setShowDialog] = useState(false);
+  const [showEditDialog, setShowEditDialog] = useState(false);
+  const [editingUser, setEditingUser] = useState<UserDto | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<CreateUserDto>();
+  const { register: registerEdit, handleSubmit: handleSubmitEdit, reset: resetEdit, setValue, formState: { errors: errorsEdit } } = useForm<UpdateUserDto>();
 
-  const fetchUsers = () => {
+  const fetchUsers = useCallback(() => {
     setLoading(true);
     UserMockApi.getUsers().then((data) => {
       setUsers(data);
       setLoading(false);
     });
-  };
+  }, [setUsers]);
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [fetchUsers]);
 
   const onSubmit = async (data: CreateUserDto) => {
     setSubmitting(true);
@@ -38,6 +41,32 @@ const UsersPage: React.FC = () => {
     reset();
     setSubmitting(false);
     fetchUsers();
+  };
+
+  const handleEditUser = (user: UserDto) => {
+    setEditingUser(user);
+    // Pre-populate form with current user data
+    setValue('name', user.name);
+    setValue('username', user.username);
+    setValue('email', user.email);
+    setValue('userTin', user.userTin);
+    setValue('phone', user.phone);
+    setValue('website', user.website || '');
+    setShowEditDialog(true);
+  };
+
+  const onEditSubmit = async (data: UpdateUserDto) => {
+    if (!editingUser) return;
+    
+    setSubmitting(true);
+    const updatedUser = await UserMockApi.updateUser(editingUser.userId, data);
+    if (updatedUser) {
+      updateUser(editingUser.userId, updatedUser);
+    }
+    setShowEditDialog(false);
+    setEditingUser(null);
+    resetEdit();
+    setSubmitting(false);
   };
 
   return (
@@ -69,6 +98,19 @@ const UsersPage: React.FC = () => {
             <Column field="email" header="Email" style={{ minWidth: '200px' }} />
             <Column field="userTin" header="TIN" style={{ minWidth: '120px' }} />
             <Column field="phone" header="Phone" style={{ minWidth: '120px' }} />
+            <Column 
+              header="Actions" 
+              style={{ minWidth: '100px' }}
+              body={(user: UserDto) => (
+                <Button 
+                  icon="pi pi-pencil" 
+                  label="Edit" 
+                  size="small"
+                  onClick={() => handleEditUser(user)}
+                  className="p-button-text p-button-sm"
+                />
+              )}
+            />
           </DataTable>
         )}
         <Dialog
@@ -112,6 +154,50 @@ const UsersPage: React.FC = () => {
             <span className="p-float-label">
               <InputText id="website" className="w-full" {...register('website')} />
               <label htmlFor="website">Website</label>
+            </span>
+          </form>
+        </Dialog>
+        <Dialog
+          header="Edit User"
+          visible={showEditDialog}
+          style={{ width: '400px' }}
+          onHide={() => { setShowEditDialog(false); setEditingUser(null); resetEdit(); }}
+          footer={
+            <div>
+              <Button label="Cancel" icon="pi pi-times" className="p-button-text" onClick={() => { setShowEditDialog(false); setEditingUser(null); resetEdit(); }} />
+              <Button label="Update" icon="pi pi-check" loading={submitting} onClick={handleSubmitEdit(onEditSubmit)} autoFocus />
+            </div>
+          }
+        >
+          <form onSubmit={handleSubmitEdit(onEditSubmit)} className="flex flex-col gap-4">
+            <span className="p-float-label">
+              <InputText id="editName" className="w-full" {...registerEdit('name')} />
+              <label htmlFor="editName">Name</label>
+            </span>
+            {errorsEdit.name && <small className="p-error">{errorsEdit.name.message}</small>}
+            <span className="p-float-label">
+              <InputText id="editUsername" className="w-full" {...registerEdit('username')} />
+              <label htmlFor="editUsername">Username</label>
+            </span>
+            {errorsEdit.username && <small className="p-error">{errorsEdit.username.message}</small>}
+            <span className="p-float-label">
+              <InputText id="editEmail" className="w-full" {...registerEdit('email')} />
+              <label htmlFor="editEmail">Email</label>
+            </span>
+            {errorsEdit.email && <small className="p-error">{errorsEdit.email.message}</small>}
+            <span className="p-float-label">
+              <InputText id="editUserTin" className="w-full" {...registerEdit('userTin')} />
+              <label htmlFor="editUserTin">TIN</label>
+            </span>
+            {errorsEdit.userTin && <small className="p-error">{errorsEdit.userTin.message}</small>}
+            <span className="p-float-label">
+              <InputText id="editPhone" className="w-full" {...registerEdit('phone')} />
+              <label htmlFor="editPhone">Phone</label>
+            </span>
+            {errorsEdit.phone && <small className="p-error">{errorsEdit.phone.message}</small>}
+            <span className="p-float-label">
+              <InputText id="editWebsite" className="w-full" {...registerEdit('website')} />
+              <label htmlFor="editWebsite">Website</label>
             </span>
           </form>
         </Dialog>
