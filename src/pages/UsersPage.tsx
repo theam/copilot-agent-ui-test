@@ -64,10 +64,10 @@ const UsersPage: React.FC = () => {
             style={{ borderRadius: '1rem', overflow: 'hidden' }}
           >
             <Column field="userId" header="ID" style={{ minWidth: '60px' }} />
-            <Column field="name" header="Name" style={{ minWidth: '150px' }} />
-            <Column field="username" header="Username" style={{ minWidth: '120px' }} />
+            <Column field="name" header="Name" sortable style={{ minWidth: '150px' }} />
+            <Column field="username" header="Username" sortable style={{ minWidth: '120px' }} />
             <Column field="email" header="Email" style={{ minWidth: '200px' }} />
-            <Column field="userTin" header="TIN" style={{ minWidth: '120px' }} />
+            <Column field="userTin" header="TIN" sortable style={{ minWidth: '120px' }} />
             <Column field="phone" header="Phone" style={{ minWidth: '120px' }} />
           </DataTable>
         )}
