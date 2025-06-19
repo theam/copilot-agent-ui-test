@@ -12,7 +12,7 @@ import type { CreateUserDto } from '@/api/mock-api.ts';
 import { useUserStore } from '@/lib/userStore';
 
 const UsersPage: React.FC = () => {
-  const { users, setUsers, addUser } = useUserStore();
+  const { users, setUsers } = useUserStore();
   const [loading, setLoading] = useState(true);
   const [showDialog, setShowDialog] = useState(false);
   const [submitting, setSubmitting] = useState(false);
