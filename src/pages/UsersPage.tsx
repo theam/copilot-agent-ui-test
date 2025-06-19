@@ -17,7 +17,9 @@ const UsersPage: React.FC = () => {
   const [showDialog, setShowDialog] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<CreateUserDto>();
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<CreateUserDto>({
+    mode: 'onBlur'
+  });
 
   const fetchUsers = () => {
     setLoading(true);
