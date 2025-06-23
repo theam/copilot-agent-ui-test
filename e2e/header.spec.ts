@@ -11,12 +11,12 @@ test.describe('Header', () => {
     // Check header has correct background color and border
     await expect(header).toHaveCSS('background-color', 'rgb(238, 238, 238)'); // #eee
     await expect(header).toHaveCSS('border-bottom-color', 'rgb(0, 0, 0)'); // black
-    await expect(header).toHaveCSS('height', '35px');
+    await expect(header).toHaveCSS('height', '150px');
     
     // Check logo is visible
     const logo = page.getByTestId('header-logo');
     await expect(logo).toBeVisible();
-    await expect(logo).toHaveAttribute('src', '/vite.svg');
+    await expect(logo).toHaveAttribute('src', '/user-group-296.svg');
     await expect(logo).toHaveAttribute('alt', 'Logo');
     
     // Check title text

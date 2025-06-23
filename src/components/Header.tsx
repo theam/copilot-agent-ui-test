@@ -3,13 +3,13 @@ import React from 'react';
 const Header: React.FC = () => {
   return (
     <header 
-      className="h-[35px] bg-[#eee] border-b border-black flex items-center px-4"
+      className="h-[150px] bg-[#eee] border-b border-black flex items-center px-4"
       data-testid="app-header"
     >
       <img 
-        src="/vite.svg" 
+        src="/user-group-296.svg" 
         alt="Logo" 
-        className="h-6 w-6 mr-3"
+        className="h-12 w-12 mr-3"
         data-testid="header-logo"
       />
       <h1 
