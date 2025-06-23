@@ -47,7 +47,7 @@ const UsersPage: React.FC = () => {
       <Card className="w-full max-w-5xl shadow-xl rounded-2xl border border-slate-200">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-3xl font-bold text-slate-800">Users</h2>
-          <Button icon="pi pi-plus" label="Add User" className="p-button-primary" onClick={() => setShowDialog(true)} />
+          <Button icon="pi pi-plus" label="Add User" className="p-button-primary" onClick={() => setShowDialog(true)} data-testid="add-user-button" />
         </div>
         {loading ? (
           <div className="flex justify-center items-center h-40">
@@ -64,6 +64,7 @@ const UsersPage: React.FC = () => {
             rowHover
             responsiveLayout="scroll"
             style={{ borderRadius: '1rem', overflow: 'hidden' }}
+            data-testid="users-table"
           >
             <Column field="userId" header="ID" style={{ minWidth: '60px' }} />
             <Column field="name" header="Name" style={{ minWidth: '150px' }} />
@@ -78,14 +79,15 @@ const UsersPage: React.FC = () => {
           visible={showDialog}
           style={{ width: '400px' }}
           onHide={() => { setShowDialog(false); reset(); }}
+          data-testid="add-user-dialog"
           footer={
             <div>
-              <Button label="Cancel" icon="pi pi-times" className="p-button-text" onClick={() => { setShowDialog(false); reset(); }} />
-              <Button label="Add" icon="pi pi-check" loading={submitting} onClick={handleSubmit(onSubmit)} autoFocus />
+              <Button label="Cancel" icon="pi pi-times" className="p-button-text" onClick={() => { setShowDialog(false); reset(); }} data-testid="cancel-button" />
+              <Button label="Add" icon="pi pi-check" loading={submitting} onClick={handleSubmit(onSubmit)} autoFocus data-testid="submit-button" />
             </div>
           }
         >
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" data-testid="user-form">
             <span className="p-float-label">
               <InputText id="name" className="w-full" {...register('name', { 
                 required: 'Name is required',
