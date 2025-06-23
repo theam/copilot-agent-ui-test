@@ -21,7 +21,6 @@ const UsersPage: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<CreateUserDto>();
-  const { register: registerEdit, handleSubmit: handleSubmitEdit, reset: resetEdit, setValue, formState: { errors: errorsEdit } } = useForm<UpdateUserDto>();
 
   const fetchUsers = () => {
     setLoading(true);
@@ -46,13 +45,6 @@ const UsersPage: React.FC = () => {
 
   const handleEditUser = (user: UserDto) => {
     setEditingUser(user);
-    // Pre-populate form with current user data
-    setValue('name', user.name);
-    setValue('username', user.username);
-    setValue('email', user.email);
-    setValue('userTin', user.userTin);
-    setValue('phone', user.phone);
-    setValue('website', user.website || '');
     setShowEditDialog(true);
   };
 
@@ -66,8 +58,12 @@ const UsersPage: React.FC = () => {
     }
     setShowEditDialog(false);
     setEditingUser(null);
-    resetEdit();
     setSubmitting(false);
+  };
+
+  const handleEditCancel = () => {
+    setShowEditDialog(false);
+    setEditingUser(null);
   };
 
   return (
@@ -92,6 +88,7 @@ const UsersPage: React.FC = () => {
             rowHover
             responsiveLayout="scroll"
             style={{ borderRadius: '1rem', overflow: 'hidden' }}
+            data-testid="users-table"
           >
             <Column field="userId" header="ID" style={{ minWidth: '60px' }} />
             <Column field="name" header="Name" style={{ minWidth: '150px' }} />
@@ -126,7 +123,7 @@ const UsersPage: React.FC = () => {
             </div>
           }
         >
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" data-testid="add-user-form">
             <span className="p-float-label">
               <InputText id="name" className="w-full" {...register('name', { required: 'Name is required' })} />
               <label htmlFor="name">Name</label>
@@ -162,17 +159,18 @@ const UsersPage: React.FC = () => {
           header="Edit User"
           visible={showEditDialog}
           style={{ width: '400px' }}
-          onHide={() => { setShowEditDialog(false); setEditingUser(null); resetEdit(); }}
+          onHide={handleEditCancel}
           footer={
             <div>
-              <Button label="Cancel" icon="pi pi-times" className="p-button-text" onClick={() => { setShowEditDialog(false); setEditingUser(null); resetEdit(); }} />
-              <Button label="Update" icon="pi pi-check" loading={submitting} onClick={handleSubmitEdit(onEditSubmit)} autoFocus />
+              <Button label="Cancel" icon="pi pi-times" className="p-button-text" onClick={handleEditCancel} />
+              <Button label="Update" icon="pi pi-check" loading={submitting} form="edit-user-form" type="submit" autoFocus />
             </div>
           }
         >
-          <form onSubmit={handleSubmitEdit(onEditSubmit)}>
-            <EditUserForm register={registerEdit} errors={errorsEdit} />
-          </form>
+          <EditUserForm 
+            user={editingUser} 
+            onSubmit={onEditSubmit}
+          />
         </Dialog>
       </Card>
     </div>

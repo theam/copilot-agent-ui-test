@@ -1,16 +1,30 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { InputText } from 'primereact/inputtext';
-import type { UseFormRegister, FieldErrors } from 'react-hook-form';
-import type { UpdateUserDto } from '@/api/mock-api.ts';
+import { useForm } from 'react-hook-form';
+import type { UpdateUserDto, UserDto } from '@/api/mock-api.ts';
 
 interface EditUserFormProps {
-  register: UseFormRegister<UpdateUserDto>;
-  errors: FieldErrors<UpdateUserDto>;
+  user: UserDto | null;
+  onSubmit: (data: UpdateUserDto) => void;
 }
 
-const EditUserForm: React.FC<EditUserFormProps> = ({ register, errors }) => {
+const EditUserForm: React.FC<EditUserFormProps> = ({ user, onSubmit }) => {
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm<UpdateUserDto>();
+
+  useEffect(() => {
+    if (user) {
+      // Pre-populate form with current user data
+      setValue('name', user.name);
+      setValue('username', user.username);
+      setValue('email', user.email);
+      setValue('userTin', user.userTin);
+      setValue('phone', user.phone);
+      setValue('website', user.website || '');
+    }
+  }, [user, setValue]);
+
   return (
-    <div className="flex flex-col gap-4">
+    <form id="edit-user-form" onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" data-testid="edit-user-form">
       <span className="p-float-label">
         <InputText id="editName" className="w-full" {...register('name')} />
         <label htmlFor="editName">Name</label>
@@ -45,7 +59,7 @@ const EditUserForm: React.FC<EditUserFormProps> = ({ register, errors }) => {
         <InputText id="editWebsite" className="w-full" {...register('website')} />
         <label htmlFor="editWebsite">Website</label>
       </span>
-    </div>
+    </form>
   );
 };
 
