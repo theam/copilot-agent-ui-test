@@ -62,6 +62,7 @@ const UsersPage: React.FC = () => {
             rowHover
             responsiveLayout="scroll"
             style={{ borderRadius: '1rem', overflow: 'hidden' }}
+            data-testid="users-table"
           >
             <Column field="userId" header="ID" style={{ minWidth: '60px' }} />
             <Column field="name" header="Name" sortable style={{ minWidth: '150px' }} />
