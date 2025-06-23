@@ -14,15 +14,15 @@ test.describe('Users Table Sorting', () => {
     await expect(table).toBeVisible();
 
     // Click on Name column header to sort
-    const nameHeader = page.locator('th').filter({ hasText: 'Name' });
+    const nameHeader = page.locator('th:has-text("Name")');
     await expect(nameHeader).toBeVisible();
     await nameHeader.click();
 
-    // Wait for sort to complete
-    await page.waitForTimeout(500);
+    // Wait for sort to complete using a more reliable method
+    await page.waitForLoadState('networkidle');
 
-    // Get all name cells and verify they are sorted
-    const nameCells = page.locator('td[data-field="name"]');
+    // Get all name cells from the second column (index 1, since ID is first)
+    const nameCells = page.locator('tbody tr td:nth-child(2)');
     const nameTexts = await nameCells.allTextContents();
     
     // Jack, Jane, Jill, Jim, John (alphabetical)
@@ -30,7 +30,7 @@ test.describe('Users Table Sorting', () => {
 
     // Click again to reverse sort
     await nameHeader.click();
-    await page.waitForTimeout(500);
+    await page.waitForLoadState('networkidle');
 
     const reversedNameTexts = await nameCells.allTextContents();
     // John, Jim, Jill, Jane, Jack (reverse alphabetical)
@@ -43,15 +43,15 @@ test.describe('Users Table Sorting', () => {
     await expect(table).toBeVisible();
 
     // Click on Username column header to sort
-    const usernameHeader = page.locator('th').filter({ hasText: 'Username' });
+    const usernameHeader = page.locator('th:has-text("Username")');
     await expect(usernameHeader).toBeVisible();
     await usernameHeader.click();
 
     // Wait for sort to complete
-    await page.waitForTimeout(500);
+    await page.waitForLoadState('networkidle');
 
-    // Get all username cells and verify they are sorted
-    const usernameCells = page.locator('td[data-field="username"]');
+    // Get all username cells from the third column (index 2)
+    const usernameCells = page.locator('tbody tr td:nth-child(3)');
     const usernameTexts = await usernameCells.allTextContents();
     
     // jackdoe, janedoe, jilldoe, jimdoe, johndoe (alphabetical)
@@ -64,15 +64,15 @@ test.describe('Users Table Sorting', () => {
     await expect(table).toBeVisible();
 
     // Click on TIN column header to sort
-    const tinHeader = page.locator('th').filter({ hasText: 'TIN' });
+    const tinHeader = page.locator('th:has-text("TIN")');
     await expect(tinHeader).toBeVisible();
     await tinHeader.click();
 
     // Wait for sort to complete
-    await page.waitForTimeout(500);
+    await page.waitForLoadState('networkidle');
 
-    // Get all TIN cells and verify they are sorted
-    const tinCells = page.locator('td[data-field="userTin"]');
+    // Get all TIN cells from the fifth column (index 5) - ID, Name, Username, Email, TIN, Phone
+    const tinCells = page.locator('tbody tr td:nth-child(5)');
     const tinTexts = await tinCells.allTextContents();
     
     // TIN values should be sorted: 1234567890, 3333333333, 5555555555, 7777777777, 9876543210
@@ -84,15 +84,15 @@ test.describe('Users Table Sorting', () => {
     const table = page.getByTestId('users-table');
     await expect(table).toBeVisible();
 
-    // Check that ID, Email, and Phone columns don't have sort indicators
-    const idHeader = page.locator('th').filter({ hasText: 'ID' });
-    const emailHeader = page.locator('th').filter({ hasText: 'Email' });
-    const phoneHeader = page.locator('th').filter({ hasText: 'Phone' });
+    // Check that ID, Email, and Phone columns don't have sortable class
+    const idHeader = page.locator('th:has-text("ID")');
+    const emailHeader = page.locator('th:has-text("Email")');
+    const phoneHeader = page.locator('th:has-text("Phone")');
     
-    // These headers should not have sort icons (pi-sort-* classes)
-    await expect(idHeader.locator('.pi-sort')).not.toBeVisible();
-    await expect(emailHeader.locator('.pi-sort')).not.toBeVisible();
-    await expect(phoneHeader.locator('.pi-sort')).not.toBeVisible();
+    // These headers should not have the p-sortable-column class
+    await expect(idHeader).not.toHaveClass(/p-sortable-column/);
+    await expect(emailHeader).not.toHaveClass(/p-sortable-column/);
+    await expect(phoneHeader).not.toHaveClass(/p-sortable-column/);
   });
 
   test('should show sort indicators on sortable columns', async ({ page }) => {
@@ -100,14 +100,14 @@ test.describe('Users Table Sorting', () => {
     const table = page.getByTestId('users-table');
     await expect(table).toBeVisible();
 
-    // Check that Name, Username, and TIN columns have sort indicators
-    const nameHeader = page.locator('th').filter({ hasText: 'Name' });
-    const usernameHeader = page.locator('th').filter({ hasText: 'Username' });
-    const tinHeader = page.locator('th').filter({ hasText: 'TIN' });
+    // Check that Name, Username, and TIN columns have sortable class
+    const nameHeader = page.locator('th:has-text("Name")');
+    const usernameHeader = page.locator('th:has-text("Username")');
+    const tinHeader = page.locator('th:has-text("TIN")');
     
-    // These headers should have sort icons visible
-    await expect(nameHeader.locator('.p-sortable-column-icon')).toBeVisible();
-    await expect(usernameHeader.locator('.p-sortable-column-icon')).toBeVisible();
-    await expect(tinHeader.locator('.p-sortable-column-icon')).toBeVisible();
+    // These headers should have the p-sortable-column class
+    await expect(nameHeader).toHaveClass(/p-sortable-column/);
+    await expect(usernameHeader).toHaveClass(/p-sortable-column/);
+    await expect(tinHeader).toHaveClass(/p-sortable-column/);
   });
 });
