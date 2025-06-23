@@ -14,7 +14,7 @@ export const users: UserDto[] = [
     name: 'Jane Doe',
     username: 'janedoe',
     email: 'jane.doe@example.com',
-    userTin: '1234567890',
+    userTin: '9876543210',
     phone: '1234567890',
   },
   {
@@ -22,7 +22,7 @@ export const users: UserDto[] = [
     name: 'Jim Doe',
     username: 'jimdoe',
     email: 'jim.doe@example.com',
-    userTin: '1234567890',
+    userTin: '5555555555',
     phone: '1234567890',
   },
   {
@@ -30,7 +30,7 @@ export const users: UserDto[] = [
     name: 'Jill Doe',
     username: 'jilldoe',
     email: 'jill.doe@example.com',
-    userTin: '1234567890',
+    userTin: '3333333333',
     phone: '1234567890',
   },
   {
@@ -38,7 +38,7 @@ export const users: UserDto[] = [
     name: 'Jack Doe',
     username: 'jackdoe',
     email: 'jack.doe@example.com',
-    userTin: '1234567890',
+    userTin: '7777777777',
     phone: '1234567890',
   },
 ]
