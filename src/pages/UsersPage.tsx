@@ -10,6 +10,7 @@ import { useForm } from 'react-hook-form';
 import { UserMockApi } from '@/api/mock-api.ts';
 import type { CreateUserDto } from '@/api/mock-api.ts';
 import { useUserStore } from '@/lib/userStore';
+import { fieldValidationRules } from '@/lib/validationUtils';
 
 const UsersPage: React.FC = () => {
   const { users, setUsers } = useUserStore();
@@ -45,7 +46,7 @@ const UsersPage: React.FC = () => {
       <Card className="w-full max-w-5xl shadow-xl rounded-2xl border border-slate-200">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-3xl font-bold text-slate-800">Users</h2>
-          <Button icon="pi pi-plus" label="Add User" className="p-button-primary" onClick={() => setShowDialog(true)} />
+          <Button icon="pi pi-plus" label="Add User" className="p-button-primary" onClick={() => setShowDialog(true)} data-testid="add-user-button" />
         </div>
         {loading ? (
           <div className="flex justify-center items-center h-40">
@@ -62,6 +63,7 @@ const UsersPage: React.FC = () => {
             rowHover
             responsiveLayout="scroll"
             style={{ borderRadius: '1rem', overflow: 'hidden' }}
+            data-testid="users-table"
           >
             <Column field="userId" header="ID" style={{ minWidth: '60px' }} />
             <Column field="name" header="Name" style={{ minWidth: '150px' }} />
@@ -83,36 +85,37 @@ const UsersPage: React.FC = () => {
             </div>
           }
         >
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" data-testid="user-form">
             <span className="p-float-label">
-              <InputText id="name" className="w-full" {...register('name', { required: 'Name is required' })} />
+              <InputText id="name" className="w-full" {...register('name', fieldValidationRules.name)} />
               <label htmlFor="name">Name</label>
             </span>
             {errors.name && <small className="p-error">{errors.name.message}</small>}
             <span className="p-float-label">
-              <InputText id="username" className="w-full" {...register('username', { required: 'Username is required' })} />
+              <InputText id="username" className="w-full" {...register('username', fieldValidationRules.username)} />
               <label htmlFor="username">Username</label>
             </span>
             {errors.username && <small className="p-error">{errors.username.message}</small>}
             <span className="p-float-label">
-              <InputText id="email" className="w-full" {...register('email', { required: 'Email is required' })} />
+              <InputText id="email" className="w-full" {...register('email', fieldValidationRules.email)} />
               <label htmlFor="email">Email</label>
             </span>
             {errors.email && <small className="p-error">{errors.email.message}</small>}
             <span className="p-float-label">
-              <InputText id="userTin" className="w-full" {...register('userTin', { required: 'TIN is required' })} />
+              <InputText id="userTin" className="w-full" {...register('userTin', fieldValidationRules.userTin)} />
               <label htmlFor="userTin">TIN</label>
             </span>
             {errors.userTin && <small className="p-error">{errors.userTin.message}</small>}
             <span className="p-float-label">
-              <InputText id="phone" className="w-full" {...register('phone', { required: 'Phone is required' })} />
+              <InputText id="phone" className="w-full" {...register('phone', fieldValidationRules.phone)} />
               <label htmlFor="phone">Phone</label>
             </span>
             {errors.phone && <small className="p-error">{errors.phone.message}</small>}
             <span className="p-float-label">
-              <InputText id="website" className="w-full" {...register('website')} />
+              <InputText id="website" className="w-full" {...register('website', fieldValidationRules.website)} />
               <label htmlFor="website">Website</label>
             </span>
+            {errors.website && <small className="p-error">{errors.website.message}</small>}
           </form>
         </Dialog>
       </Card>
