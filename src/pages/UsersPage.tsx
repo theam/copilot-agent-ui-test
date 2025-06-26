@@ -6,6 +6,7 @@ import { Card } from 'primereact/card';
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
+import { InputMask } from 'primereact/inputmask';
 import { useForm } from 'react-hook-form';
 import { UserMockApi } from '@/api/mock-api.ts';
 import type { CreateUserDto } from '@/api/mock-api.ts';
@@ -105,7 +106,7 @@ const UsersPage: React.FC = () => {
             </span>
             {errors.userTin && <small className="p-error">{errors.userTin.message}</small>}
             <span className="p-float-label">
-              <InputText id="phone" className="w-full" {...register('phone', { required: 'Phone is required' })} />
+              <InputMask id="phone" mask="999-999-9999" className="w-full" {...register('phone', { required: 'Phone is required' })} />
               <label htmlFor="phone">Phone</label>
             </span>
             {errors.phone && <small className="p-error">{errors.phone.message}</small>}
